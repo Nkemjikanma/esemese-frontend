@@ -33,12 +33,12 @@ export const Navbar = () => {
   // }
 
   return (
-    <nav className="flex flex-col items-center justify-center py-3 px-4 md:px-0 font-bold gap-2 w-10/12 min-w-96 transition-all duration-300">
+    <nav className="flex flex-col items-center justify-center py-4 md:px-0 font-bold gap-2 w-10/12 min-w-96 transition-all duration-300 border-b-2">
       <div className="w-full items-center justify-center flex flex-row">
         <div className="flex flex-1 items-center">
           <a
             href="/"
-            className="antialiased flex items-center gap-1 w-fit p-1 h5 text-zinc-600 hover:text-zinc-900 dark:hover:text-amber-700 transition-all font-normal dark:text-amber-600"
+            className="antialiased flex items-center gap-1 w-fit h5 text-zinc-600 hover:text-zinc-900 dark:hover:text-amber-700 transition-all font-normal dark:text-amber-600"
           >
             {/* <PhotoFrameIcon width="40px" height="60px" /> */}
             <PhotoFrameIcon />

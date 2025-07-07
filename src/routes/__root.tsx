@@ -1,8 +1,17 @@
-import { Link, Outlet, createRootRoute } from "@tanstack/react-router";
+import type { QueryClient } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import {
+  createRootRoute,
+  createRootRouteWithContext,
+  Link,
+  Outlet,
+} from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { Navbar } from "@/components/Navbar";
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<{
+  queryClient: QueryClient;
+}>()({
   component: Component,
 });
 
@@ -10,7 +19,7 @@ function Component() {
   return (
     <>
       {/* <div className="p-2 flex gap-2 text-lg border">
-        <Navbar />
+
         <Link
           to="/"
           activeProps={{
@@ -37,8 +46,11 @@ function Component() {
           About
         </Link>
       </div> */}
-      <hr />
+      <div className="h-1/12 w-full flex flex-col items-center">
+        <Navbar />
+      </div>
       <Outlet />
+      <ReactQueryDevtools buttonPosition="top-right" />
       <TanStackRouterDevtools position="bottom-right" />
     </>
   );
