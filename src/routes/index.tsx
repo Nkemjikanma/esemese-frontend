@@ -1,5 +1,6 @@
-import { useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { AboutSection } from "@/components/AboutSection";
 import { DefaultLayout } from "@/components/DefaultLayout";
 import { CategoriesDisplay } from "../components/CategoriesDisplay";
 import { CollectionsGrid } from "../components/CollectionsGrid";
@@ -22,9 +23,12 @@ function HomeComponent() {
     <DefaultLayout>
       <div className="relative flex flex-col justify-center items-center gap-2 h-5/6 w-screen mx-auto min-w-96">
         <LatestPhotoCarousel favourites={favorites} />
-        <RecentActivities />
-        <CollectionsGrid />
+        <AboutSection />
+
         <CategoriesDisplay />
+        <CollectionsGrid />
+
+        <RecentActivities />
       </div>
     </DefaultLayout>
   );

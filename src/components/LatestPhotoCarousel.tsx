@@ -12,7 +12,6 @@ import type { FavouritesResponse } from "@/hooks/useGetFavourites";
 import { ipfsURL } from "../lib/utils";
 import { IPFSImage } from "./IPFSImages";
 import { useRouter } from "@tanstack/react-router";
-import { useMemo } from "react";
 
 interface LatestPhotoCarouselProps {
   favourites?: FavouritesResponse;
@@ -161,21 +160,18 @@ export const LatestPhotoCarousel = ({
               <CarouselContent className="relative h-full w-full mx-auto">
                 {favourites?.images.map((photo, index) => {
                   const imageURL = ipfsURL(photo.cid, photo.name);
-
                   return (
                     <CarouselItem
                       key={photo.id}
                       className="relative h-[60vh] px-1"
                     >
-                      <div className="relative h-full w-full overflow-hidden group">
-                        {/* <div className="absolute inset-0 bg-black bg-opacity-30" />{" "} */}
-                        {/* Reduced opacity */}
+                      <div className="relative h-full w-full overflow-hidden group flex justify-center items-center">
                         <IPFSImage
                           src={imageURL}
                           cid={photo.cid}
                           alt={photo.name}
                           filename={photo.name}
-                          className="relative object-cover object-center h-auto scale-105 group-hover:scale-100 transition-transform duration-300 aspect-3/2 inline max-w-none"
+                          className="object-cover w-full h-full scale-100 group-hover:scale-105 transition-transform duration-300"
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
                           onError={(e) => {
                             console.error(
@@ -189,13 +185,7 @@ export const LatestPhotoCarousel = ({
                             );
                           }}
                         />
-                        <img
-                          src={imageURL}
-                          alt={photo.name}
-                          width="400px"
-                          className="aspect-3/2 inline max-w-none"
-                        />
-                        <div className="absolute inset-0 bg-black bg-opacity-50" />
+                        <div className="absolute inset-0 bg-black opacity-50" />
                         <div className="absolute inset-0 flex flex-col justify-center items-center text-white text-center p-4">
                           <h1
                             className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4 transition-all duration-500 ${
@@ -267,3 +257,62 @@ export const LatestPhotoCarousel = ({
     </div>
   );
 };
+
+/* return (
+ <div className="relative h-full w-full overflow-hidden group">
+  <div className="absolute inset-0 bg-black bg-opacity-30" />{" "}
+   Reduced opacity */
+
+/*  <img
+    src={imageURL}
+    alt={photo.name}
+    width="400px"
+    className="aspect-3/2 inline max-w-none"
+  />
+  <div className="absolute inset-0 bg-black bg-opacity-50" />
+  <div className="absolute inset-0 flex flex-col justify-center items-center text-white text-center p-4">
+    <h1
+      className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4 transition-all duration-500 ${
+        currentIndex === index
+          ? "opacity-100 translate-y-0"
+          : "opacity-0 translate-y-4"
+      }`}
+    >
+      {photo.name}
+    </h1>
+    <p
+      className={`text-lg md:text-xl mb-4 md:mb-8 max-w-md transition-all duration-500 delay-100 ${
+        currentIndex === index
+          ? "opacity-100 translate-y-0"
+          : "opacity-0 translate-y-4"
+      }`}
+    >
+       {photo.description}
+    </p>
+    <div
+      className={`flex flex-col sm:flex-row gap-4 transition-all duration-500 delay-200 ${
+        currentIndex === index
+          ? "opacity-100 translate-y-0"
+          : "opacity-0 translate-y-4"
+      }`}
+    >
+      <Button
+        size="lg"
+        className="rounded-none bg-black backdrop-blur-md isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 hover:before:w-full before:-left-full hover:before:left-0 before:rounded-full before:bg-amber-600 hover:text-gray-50 dark:text-gray-50 before:-z-10 before:aspect-square hover:before:scale-150 hover:before:duration-700 relative z-10 px-4 py-2 overflow-hidden group"
+        // onClick={() => {
+        //   router.navigate(`/gallery/${photo.collectionId}`);
+        // }}
+      >
+        Explore Collection
+      </Button>
+      <Button
+        size="lg"
+        variant="outline"
+        className="bg-amber-600 rounded-none text-black dark:text-white dark:hover:bg-zinc-900"
+      >
+        Learn More
+      </Button>
+    </div>
+  </div>
+</div>
+*/
