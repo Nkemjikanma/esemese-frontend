@@ -1,4 +1,4 @@
-import { useRouter } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { Loader2, MoveRight } from "lucide-react";
 // import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -71,7 +71,6 @@ export const FavoritesCarousel = ({
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const router = useRouter();
 
   useEffect(() => {
     if (!favourites) {
@@ -127,13 +126,13 @@ export const FavoritesCarousel = ({
       <div className="relative w-full flex flex-col justify-center items-center">
         <div className="flex justify-between py-4 w-10/12">
           <h4 className="font-normal">FEATURED PHOTOS</h4>
-          <a
-            href="/gallery"
+          <Link
+            to="/gallery"
             className="text-sm text-zinc-500 hover:text-zinc-800 flex items-center"
           >
             VIEW ALL
             <MoveRight className="h-4 w-4 ml-1" />
-          </a>
+          </Link>
         </div>
 
         <div className="relative flex flex-col items-center w-10/12 h-[62vh]">
@@ -185,56 +184,37 @@ export const FavoritesCarousel = ({
                             );
                           }}
                         />
-                        <div className="absolute inset-0 bg-black opacity-50" />
-                        <div className="absolute inset-0 flex flex-col justify-center items-center text-white text-center p-4">
-                          <h1
-                            className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4 transition-all duration-500 ${
-                              currentIndex === index
-                                ? "opacity-100 translate-y-0"
-                                : "opacity-0 translate-y-4"
-                            }`}
-                          >
-                            {photo.name}
-                          </h1>
-                          <p
-                            className={`text-lg md:text-xl mb-4 md:mb-8 max-w-md transition-all duration-500 delay-100 ${
-                              currentIndex === index
-                                ? "opacity-100 translate-y-0"
-                                : "opacity-0 translate-y-4"
-                            }`}
-                          >
-                            {/* {photo.description} */}
-                          </p>
-                          <div
-                            className={`flex flex-col sm:flex-row gap-4 transition-all duration-500 delay-200 ${
-                              currentIndex === index
-                                ? "opacity-100 translate-y-0"
-                                : "opacity-0 translate-y-4"
-                            }`}
-                          >
-                            <Button
-                              size="lg"
-                              className="rounded-none bg-black backdrop-blur-md isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 hover:before:w-full before:-left-full hover:before:left-0 before:rounded-full before:bg-amber-600 hover:text-gray-50 dark:text-gray-50 before:-z-10 before:aspect-square hover:before:scale-150 hover:before:duration-700 relative z-10 px-4 py-2 overflow-hidden group"
-                              // onClick={() => {
-                              //   router.navigate(`/gallery/${photo.collectionId}`);
-                              // }}
-                            >
-                              Explore Collection
-                            </Button>
-                            <Button
-                              size="lg"
-                              variant="outline"
-                              className="bg-amber-600 rounded-none text-black dark:text-white dark:hover:bg-zinc-900"
-                            >
-                              Learn More
-                            </Button>
-                          </div>
-                        </div>
                       </div>
                     </CarouselItem>
                   );
                 })}
               </CarouselContent>
+              <div className="absolute inset-0 bg-black opacity-50" />
+              <div className="absolute inset-0 flex flex-col justify-center items-center text-white text-center p-4">
+                <h1
+                  className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4 transition-all duration-500 `}
+                >
+                  Esemese
+                </h1>
+
+                <div
+                  className={`flex flex-col sm:flex-row gap-4 transition-all duration-500 delay-200 `}
+                >
+                  <Link
+                    className="rounded-none bg-black backdrop-blur-md isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 hover:before:w-full before:-left-full hover:before:left-0 before:rounded-full before:bg-amber-600 hover:text-gray-50 dark:text-gray-50 before:-z-10 before:aspect-square hover:before:scale-150 hover:before:duration-700 relative z-10 px-4 py-2 overflow-hidden group"
+                    to="/gallery"
+                  >
+                    Explore Collections
+                  </Link>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="bg-amber-600 rounded-none text-black dark:text-white dark:hover:bg-zinc-900"
+                  >
+                    Learn More
+                  </Button>
+                </div>
+              </div>
             </Carousel>
           )}
         </div>
@@ -257,62 +237,3 @@ export const FavoritesCarousel = ({
     </div>
   );
 };
-
-/* return (
- <div className="relative h-full w-full overflow-hidden group">
-  <div className="absolute inset-0 bg-black bg-opacity-30" />{" "}
-   Reduced opacity */
-
-/*  <img
-    src={imageURL}
-    alt={photo.name}
-    width="400px"
-    className="aspect-3/2 inline max-w-none"
-  />
-  <div className="absolute inset-0 bg-black bg-opacity-50" />
-  <div className="absolute inset-0 flex flex-col justify-center items-center text-white text-center p-4">
-    <h1
-      className={`text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4 transition-all duration-500 ${
-        currentIndex === index
-          ? "opacity-100 translate-y-0"
-          : "opacity-0 translate-y-4"
-      }`}
-    >
-      {photo.name}
-    </h1>
-    <p
-      className={`text-lg md:text-xl mb-4 md:mb-8 max-w-md transition-all duration-500 delay-100 ${
-        currentIndex === index
-          ? "opacity-100 translate-y-0"
-          : "opacity-0 translate-y-4"
-      }`}
-    >
-       {photo.description}
-    </p>
-    <div
-      className={`flex flex-col sm:flex-row gap-4 transition-all duration-500 delay-200 ${
-        currentIndex === index
-          ? "opacity-100 translate-y-0"
-          : "opacity-0 translate-y-4"
-      }`}
-    >
-      <Button
-        size="lg"
-        className="rounded-none bg-black backdrop-blur-md isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 hover:before:w-full before:-left-full hover:before:left-0 before:rounded-full before:bg-amber-600 hover:text-gray-50 dark:text-gray-50 before:-z-10 before:aspect-square hover:before:scale-150 hover:before:duration-700 relative z-10 px-4 py-2 overflow-hidden group"
-        // onClick={() => {
-        //   router.navigate(`/gallery/${photo.collectionId}`);
-        // }}
-      >
-        Explore Collection
-      </Button>
-      <Button
-        size="lg"
-        variant="outline"
-        className="bg-amber-600 rounded-none text-black dark:text-white dark:hover:bg-zinc-900"
-      >
-        Learn More
-      </Button>
-    </div>
-  </div>
-</div>
-*/
