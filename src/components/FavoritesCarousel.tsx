@@ -1,3 +1,4 @@
+import { useRouter } from "@tanstack/react-router";
 import { Loader2, MoveRight } from "lucide-react";
 // import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -11,9 +12,8 @@ import {
 import type { FavouritesResponse } from "@/hooks/useGetFavourites";
 import { ipfsURL } from "../lib/utils";
 import { IPFSImage } from "./IPFSImages";
-import { useRouter } from "@tanstack/react-router";
 
-interface LatestPhotoCarouselProps {
+interface FavoritesCarouselProps {
   favourites?: FavouritesResponse;
   intervalTime?: number; // Time in milliseconds
   autoplayEnabled?: boolean;
@@ -62,11 +62,11 @@ interface LatestPhotoCarouselProps {
 //   },
 // ];
 
-export const LatestPhotoCarousel = ({
+export const FavoritesCarousel = ({
   favourites,
   intervalTime = 5000, // 5 secs
   autoplayEnabled = true,
-}: LatestPhotoCarouselProps) => {
+}: FavoritesCarouselProps) => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
   const [currentIndex, setCurrentIndex] = useState(0);

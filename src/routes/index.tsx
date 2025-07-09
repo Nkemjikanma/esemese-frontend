@@ -4,7 +4,7 @@ import { AboutSection } from "@/components/AboutSection";
 import { DefaultLayout } from "@/components/DefaultLayout";
 import { CategoriesDisplay } from "../components/CategoriesDisplay";
 import { CollectionsGrid } from "../components/CollectionsGrid";
-import { LatestPhotoCarousel } from "../components/LatestPhotoCarousel";
+import { FavoritesCarousel } from "../components/FavoritesCarousel";
 import { RecentActivities } from "../components/RecentActivities";
 import { useGetFavourites } from "../hooks/useGetFavourites";
 
@@ -22,7 +22,7 @@ function HomeComponent() {
   return (
     <DefaultLayout>
       <div className="relative flex flex-col justify-center items-center gap-2 h-5/6 w-screen mx-auto min-w-96">
-        <LatestPhotoCarousel favourites={favorites} />
+        <FavoritesCarousel favourites={favorites} />
         <AboutSection />
 
         <CategoriesDisplay />

@@ -1,49 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
+import { ExternalLink, Image as ImageIcon } from "lucide-react";
+import { useGetCollectionThumbnail } from "@/hooks/useGetCollectionThumbnail";
 import { AddButton } from "../assets/AddButton";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
-import { Link } from "@tanstack/react-router";
 
-type CollectionType = {
-  id: string;
-  name: string;
-  imageUrl: string;
-  photoCount: number;
-};
 export const CollectionsGrid = () => {
-  const [collections, setCollections] = useState<CollectionType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const collectionsQuery = useGetCollectionThumbnail();
+  const { data, isLoading, error } = useSuspenseQuery(collectionsQuery);
 
-  useEffect(() => {
-    // Simulating an API call
-    setTimeout(() => {
-      setCollections([
-        {
-          id: "1",
-          name: "Urban Landscapes",
-          imageUrl: "/2.jpg",
-          photoCount: 12,
-        },
-        {
-          id: "2",
-          name: "Nature's Wonders",
-          imageUrl: "/3.jpg",
-          photoCount: 15,
-        },
-        {
-          id: "3",
-          name: "Abstract Realities",
-          imageUrl: "/4.jpg",
-          photoCount: 8,
-        },
-        { id: "4", name: "Serene Waters", imageUrl: "/5.jpg", photoCount: 10 },
-      ]);
-      setIsLoading(false);
-    }, 1000);
-  }, []);
+  const collections = data?.collections || [];
 
   if (isLoading) {
     return (
@@ -63,6 +32,20 @@ export const CollectionsGrid = () => {
               </Card>
             ))}
           </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="py-12 px-4 md:px-6">
+        <div className="max-w-6xl mx-auto text-center">
+          <h3 className="text-3xl font-bold mb-4">Error Loading Collections</h3>
+          <p className="text-xl mb-8">
+            {error.message || "An error occurred while loading collections"}
+          </p>
+          <Button onClick={() => window.location.reload()}>Try Again</Button>
         </div>
       </section>
     );
@@ -88,36 +71,54 @@ export const CollectionsGrid = () => {
   }
 
   return (
-    <section className="relative flex py-6 w-full">
+    <section className="relative flex py-12 w-full">
       <div className="mx-auto w-5/6">
-        <h4 className="font-normal">Collections</h4>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mt-5">
+        <h4 className="font-medium text-xl mb-8 uppercase tracking-wide">
+          Collections
+        </h4>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-5">
           {collections.map((collection) => (
-            <Card
+            <Link
               key={collection.id}
-              className="overflow-hidden rounded-none border-zinc-600"
+              to={`/gallery/${collection.id}`}
+              className="aspect-[4/5] relative overflow-hidden rounded-none group cursor-pointer"
             >
-              <CardContent className="p-0">
-                <div className="relative w-full h-48">
-                  <img
-                    src={collection.imageUrl || "/placeholder.svg"}
-                    alt={collection.name}
-                    loading="lazy"
-                    className="relative object-cover object-center"
-                    sizes="(max-width: 768px) 83.333vw, (max-width: 1024px) 41.666vw, 20.833vw"
-                  />
-                </div>
-                <div className="p-4">
-                  <h3 className="text-xl font-semibold mb-2">
+              {/* Background Image */}
+              <div className="absolute inset-0">
+                <img
+                  src={collection.imageUrl || "/placeholder.svg"}
+                  alt={collection.name}
+                  loading="lazy"
+                  className="h-full w-full object-cover object-center transition-transform duration-700 ease-in-out group-hover:scale-110"
+                />
+
+                {/* Overlay Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-70 group-hover:opacity-90 transition-opacity duration-300"></div>
+              </div>
+
+              {/* Content */}
+              <div className="absolute inset-0 flex flex-col justify-end p-6 text-white z-10">
+                <div className="transform transition-transform duration-300 group-hover:translate-y-0 translate-y-2">
+                  <h3 className="text-2xl font-bold mb-2 group-hover:text-amber-300 transition-colors">
                     {collection.name}
                   </h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                    {collection.photoCount} photos
-                  </p>
-                  <Link to={`/gallery/$galleryId`}>View Collection</Link>
+
+                  <div className="flex items-center space-x-2 opacity-80 mb-2">
+                    <ImageIcon size={16} />
+                    <span className="text-sm">
+                      {collection.photoCount} photos
+                    </span>
+                  </div>
+
+                  <div className="flex items-center mt-3 opacity-0 transform -translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                    <span className="text-sm font-medium mr-1">
+                      View Collection
+                    </span>
+                    <ExternalLink size={14} />
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </Link>
           ))}
         </div>
       </div>

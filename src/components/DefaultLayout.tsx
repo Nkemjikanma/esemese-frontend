@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import Footer from "./Footer";
-import { Navbar } from "./Navbar";
 
 export function DefaultLayout({ children }: { children: ReactNode }) {
   return (
@@ -8,9 +7,6 @@ export function DefaultLayout({ children }: { children: ReactNode }) {
       <main className="layout w-full flex flex-grow flex-col justify-center">
         {children}
       </main>
-      <footer className="h-1/12 w-full mt-4">
-        <Footer />
-      </footer>
     </div>
   );
 }

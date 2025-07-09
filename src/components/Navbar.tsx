@@ -40,7 +40,6 @@ export const Navbar = () => {
             href="/"
             className="antialiased flex items-center gap-1 w-fit h5 text-zinc-600 hover:text-zinc-900 dark:hover:text-amber-700 transition-all font-normal dark:text-amber-600"
           >
-            {/* <PhotoFrameIcon width="40px" height="60px" /> */}
             <PhotoFrameIcon />
             Esemese
           </a>
