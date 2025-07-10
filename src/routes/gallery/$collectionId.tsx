@@ -1,13 +1,10 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, useLoaderData } from "@tanstack/react-router";
+import { createFileRoute, Link, useLoaderData } from "@tanstack/react-router";
 import { MoveLeft } from "lucide-react";
 import { PhotoItem } from "@/components/CollectionItem";
 import { CommandSearch } from "@/components/CommandSearch";
 import { useGetCollectionThumbnail } from "@/hooks/useGetCollectionThumbnail";
-import {
-  getGroupImagesOptions,
-  useGetGroupImages,
-} from "@/hooks/useGetGroupImages";
+import { getGroupImagesOptions } from "@/hooks/useGetGroupImages";
 
 export const Route = createFileRoute("/gallery/$collectionId")({
   component: RouteComponent,
@@ -28,9 +25,9 @@ export const Route = createFileRoute("/gallery/$collectionId")({
       <p className="text-red-500">
         {error?.message || "An unknown error occurred"}
       </p>
-      <a href="/gallery" className="mt-4 text-amber-600 hover:underline">
+      <Link to="/gallery" className="mt-4 text-amber-600 hover:underline">
         Return to Gallery
-      </a>
+      </Link>
     </div>
   ),
 });

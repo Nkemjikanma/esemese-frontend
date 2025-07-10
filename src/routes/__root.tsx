@@ -10,6 +10,18 @@ export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
 }>()({
   component: Component,
+  head: () => ({
+    meta: [
+      { name: "description", content: "ulo ngosi nke Nkemjika" },
+      { title: "Esemese" },
+    ],
+    links: [
+      {
+        rel: "icon",
+        href: "/esemese.ico",
+      },
+    ],
+  }),
 });
 
 function Component() {

@@ -146,6 +146,7 @@ function RouteComponent() {
                             <Link
                               className="flex items-center space-x-2 text-white hover:text-amber-600 transition-colors duration-300 w-fit"
                               to="/gallery/$collectionId"
+                              from={Route.fullPath}
                               params={{ collectionId: collection.id }}
                             >
                               <span>View Collection</span>

@@ -13,6 +13,10 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GalleryIndexRouteImport } from './routes/gallery/index'
 import { Route as GalleryCollectionIdRouteImport } from './routes/gallery/$collectionId'
+import { Route as authRegisterRouteImport } from './routes/(auth)/register'
+import { Route as authLoginRouteImport } from './routes/(auth)/login'
+import { Route as accountWalletIdRouteRouteImport } from './routes/(account)/$walletId/route'
+import { Route as accountWalletIdIndexRouteImport } from './routes/(account)/$walletId/index'
 
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
@@ -34,37 +38,95 @@ const GalleryCollectionIdRoute = GalleryCollectionIdRouteImport.update({
   path: '/gallery/$collectionId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const authRegisterRoute = authRegisterRouteImport.update({
+  id: '/(auth)/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authLoginRoute = authLoginRouteImport.update({
+  id: '/(auth)/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const accountWalletIdRouteRoute = accountWalletIdRouteRouteImport.update({
+  id: '/(account)/$walletId',
+  path: '/$walletId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const accountWalletIdIndexRoute = accountWalletIdIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => accountWalletIdRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/$walletId': typeof accountWalletIdRouteRouteWithChildren
+  '/login': typeof authLoginRoute
+  '/register': typeof authRegisterRoute
   '/gallery/$collectionId': typeof GalleryCollectionIdRoute
   '/gallery': typeof GalleryIndexRoute
+  '/$walletId/': typeof accountWalletIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/login': typeof authLoginRoute
+  '/register': typeof authRegisterRoute
   '/gallery/$collectionId': typeof GalleryCollectionIdRoute
   '/gallery': typeof GalleryIndexRoute
+  '/$walletId': typeof accountWalletIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/(account)/$walletId': typeof accountWalletIdRouteRouteWithChildren
+  '/(auth)/login': typeof authLoginRoute
+  '/(auth)/register': typeof authRegisterRoute
   '/gallery/$collectionId': typeof GalleryCollectionIdRoute
   '/gallery/': typeof GalleryIndexRoute
+  '/(account)/$walletId/': typeof accountWalletIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/gallery/$collectionId' | '/gallery'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/$walletId'
+    | '/login'
+    | '/register'
+    | '/gallery/$collectionId'
+    | '/gallery'
+    | '/$walletId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/gallery/$collectionId' | '/gallery'
-  id: '__root__' | '/' | '/about' | '/gallery/$collectionId' | '/gallery/'
+  to:
+    | '/'
+    | '/about'
+    | '/login'
+    | '/register'
+    | '/gallery/$collectionId'
+    | '/gallery'
+    | '/$walletId'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/(account)/$walletId'
+    | '/(auth)/login'
+    | '/(auth)/register'
+    | '/gallery/$collectionId'
+    | '/gallery/'
+    | '/(account)/$walletId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  accountWalletIdRouteRoute: typeof accountWalletIdRouteRouteWithChildren
+  authLoginRoute: typeof authLoginRoute
+  authRegisterRoute: typeof authRegisterRoute
   GalleryCollectionIdRoute: typeof GalleryCollectionIdRoute
   GalleryIndexRoute: typeof GalleryIndexRoute
 }
@@ -99,12 +161,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GalleryCollectionIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(auth)/register': {
+      id: '/(auth)/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof authRegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/login': {
+      id: '/(auth)/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof authLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(account)/$walletId': {
+      id: '/(account)/$walletId'
+      path: '/$walletId'
+      fullPath: '/$walletId'
+      preLoaderRoute: typeof accountWalletIdRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(account)/$walletId/': {
+      id: '/(account)/$walletId/'
+      path: '/'
+      fullPath: '/$walletId/'
+      preLoaderRoute: typeof accountWalletIdIndexRouteImport
+      parentRoute: typeof accountWalletIdRouteRoute
+    }
   }
 }
+
+interface accountWalletIdRouteRouteChildren {
+  accountWalletIdIndexRoute: typeof accountWalletIdIndexRoute
+}
+
+const accountWalletIdRouteRouteChildren: accountWalletIdRouteRouteChildren = {
+  accountWalletIdIndexRoute: accountWalletIdIndexRoute,
+}
+
+const accountWalletIdRouteRouteWithChildren =
+  accountWalletIdRouteRoute._addFileChildren(accountWalletIdRouteRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  accountWalletIdRouteRoute: accountWalletIdRouteRouteWithChildren,
+  authLoginRoute: authLoginRoute,
+  authRegisterRoute: authRegisterRoute,
   GalleryCollectionIdRoute: GalleryCollectionIdRoute,
   GalleryIndexRoute: GalleryIndexRoute,
 }

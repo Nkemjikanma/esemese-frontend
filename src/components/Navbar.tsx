@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { PersonStanding } from "lucide-react";
 import { useEffect, useState } from "react";
 // import { useActiveAccount } from "thirdweb/react";
@@ -46,6 +47,14 @@ export const Navbar = () => {
         </div>
         {mounted ? (
           <div className="flex flex-row gap-2 minw-[262px] h-fit">
+            <Link
+              to="/$walletId"
+              params={{ walletId: "nkemjika" }}
+              className="relative flex items-center justify-center h-10 w-10  rounded-none border border-zinc-200 dark:border-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-900 focus:border-0 outline-zinc-200"
+            >
+              <PersonStanding className="" />
+              <span className="sr-only">Profile link</span>
+            </Link>
             {/* {account?.address && (
               <Link
                 href={`/${account?.address}`}
