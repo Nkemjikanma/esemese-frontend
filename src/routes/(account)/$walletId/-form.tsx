@@ -119,6 +119,8 @@ export function UploadForm({ mode }: UploadFormProps) {
     setPreviewURLs(newURLs);
   };
 
+  console.log("here", form.getFieldValue("createNewGroup"));
+
   return (
     <form
       onSubmit={(e) => {
@@ -184,9 +186,8 @@ export function UploadForm({ mode }: UploadFormProps) {
                   <Label htmlFor={field.name}>Create new group</Label>
                   <Switch
                     id={field.name}
-                    onCheckedChange={(checked) =>
-                      form.setFieldValue("createNewGroup", checked)
-                    }
+                    checked={field.state.value}
+                    onCheckedChange={(checked) => field.handleChange(checked)}
                   />
                   <FieldInfo field={field} />
                 </>
@@ -195,54 +196,56 @@ export function UploadForm({ mode }: UploadFormProps) {
           />
         </div>
 
-        {form.getFieldValue("createNewGroup") ? (
-          <div>
-            <form.Field
-              name="groupName"
-              children={(field) => (
-                <>
-                  <Label htmlFor={field.name}>New Group Name</Label>
-                  <Input
-                    id={field.name}
-                    name={field.name}
-                    value={field.state.value}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    placeholder="Enter collection name"
-                  />
-                  <FieldInfo field={field} />
-                </>
-              )}
-            />
-          </div>
-        ) : (
-          <div>
-            <form.Field
-              name="groupId"
-              children={(field) => (
-                <>
-                  <Select
-                    value={form.getFieldValue("groupId")}
-                    onValueChange={(value) =>
-                      form.setFieldValue("groupId", value)
-                    }
-                  >
-                    <SelectTrigger id="group-id">
-                      <SelectValue placeholder="Select a group" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {GROUPS.map((group) => (
-                        <SelectItem key={group.id} value={group.id}>
-                          {group.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </>
-              )}
-            />
-          </div>
-        )}
+        <form.Subscribe
+          selector={(state) => state.values.createNewGroup}
+          children={(createNewGroup) => {
+            if (createNewGroup) {
+              return (
+                <form.Field name="createNewGroup">
+                  {(field) => (
+                    <>
+                      <Label htmlFor={field.name}>New Group Name here</Label>
+                      <Input
+                        id={field.name}
+                        name={field.name}
+                        onBlur={field.handleBlur}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        placeholder="Enter collection name"
+                      />
+                      <FieldInfo field={field} />
+                    </>
+                  )}
+                </form.Field>
+              );
+            } else {
+              return (
+                <form.Field name="groupId">
+                  {(field) => (
+                    <>
+                      <Select
+                        value={field.state.value}
+                        onValueChange={(value) =>
+                          form.setFieldValue("groupId", value)
+                        }
+                      >
+                        <SelectTrigger id="group-id">
+                          <SelectValue placeholder="Select a group" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {GROUPS.map((group) => (
+                            <SelectItem key={group.id} value={group.id}>
+                              {group.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </>
+                  )}
+                </form.Field>
+              );
+            }
+          }}
+        />
       </div>
     </form>
   );
