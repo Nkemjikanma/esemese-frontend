@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import { useUploadPhotos } from "@/hooks/useUploadPhoto";
 
 interface UploadFormProps {
   mode: "single" | "group";
@@ -30,7 +31,7 @@ const imageFileSchema = fileSchema.refine(
   { message: "Invalid image file type" },
 );
 
-const photoMetadataSchema = z.object({
+export const photoMetadataSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
   category: z.string().min(1, "Category is required"),
@@ -46,10 +47,6 @@ const formSchema = z.object({
   groupName: z.string().optional(),
   groupId: z.string().optional(),
   photos: z.array(photoMetadataSchema),
-
-  // share metadata across multiple photos
-  // useSharedMetadata: z.boolean().default(false),
-  // sharedMetadata: photoMetadataSchema.optional(),
 });
 
 const { fieldContext, formContext } = createFormHookContexts();
@@ -99,7 +96,7 @@ const CATEGORIES = [
 
 const LENSES = ["50mm f/1.4", "35mm f/1.4"];
 
-interface FileType {
+export interface FileType {
   id: string; // Unique ID for each photo
   previewURL: string;
   file: File;
@@ -109,25 +106,19 @@ export function UploadForm({ mode }: UploadFormProps) {
   const [files, setFiles] = useState<FileType[]>([]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { upload, progress, isUploading, error } = useUploadPhotos();
   const form = useAppForm({
     defaultValues: {
       createNewGroup: false,
       groupId: "",
       groupName: "",
       photos: [] as z.infer<typeof photoMetadataSchema>[],
-      // useSharedMetadata: false,
-      // sharedMetadata: {
-      //   camera: "",
-      //   lens: "",
-      //   iso: "",
-      //   aperture: "",
-      //   shutterSpeed: "",
-      // },
     },
     validators: {
-      onChange: () => formSchema,
+      onChange: formSchema,
     },
-    onSubmit: ({ value }) => {
+    onSubmit: async ({ value }) => {
       console.log("Form submitted with values:", JSON.stringify(value));
 
       if (files.length === 0) {
@@ -140,6 +131,8 @@ export function UploadForm({ mode }: UploadFormProps) {
       };
 
       console.log(submissionData);
+
+      await upload(submissionData);
     },
   });
 
@@ -178,7 +171,7 @@ export function UploadForm({ mode }: UploadFormProps) {
     setFiles(newFiles);
   };
 
-  console.log(form.state.canSubmit);
+  console.log(form.fieldInfo);
   return (
     <form
       onSubmit={(e) => {

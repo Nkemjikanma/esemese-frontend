@@ -25,6 +25,7 @@ type Category =
 
 const categories = [
   "Black and White",
+  "Theatre",
   "Travel",
   "Nature",
   "Portrait",
@@ -35,49 +36,6 @@ const categories = [
   "Grayscale",
   "Heavy filters",
 ];
-
-// const photos: PhotoType[] = [
-//   {
-//     id: 1,
-//     title: "Urban Landscape",
-//     description: "A stunning cityscape at twilight",
-//     image: "/2.jpg",
-//     position: "center",
-//     category: ["Black and White", "Travel", "Nature"],
-//   },
-//   {
-//     id: 2,
-//     title: "Natural Wonder",
-//     description: "Breathtaking view of a mountain range",
-//     image: "/3.jpg",
-//     position: "center",
-//     category: ["Landscape", "Street", "Urban"],
-//   },
-//   {
-//     id: 3,
-//     title: "Abstract Reality",
-//     description: "A mesmerizing play of light and shadow-sm",
-//     image: "/4.jpg",
-//     position: "center",
-//     category: ["Urban Landscape", "Grayscale", "Heavy filters"],
-//   },
-//   {
-//     id: 4,
-//     title: "Serene Waters",
-//     description: "Tranquil lake reflecting the sky",
-//     image: "/5.jpg",
-//     position: "center",
-//     category: ["Heavy filters", "AI Variant"],
-//   },
-//   {
-//     id: 5,
-//     title: "Wildlife Moment",
-//     description: "Rare capture of nature in action",
-//     image: "/6.jpg",
-//     position: "center",
-//     category: ["wildlife", "nature"],
-//   },
-// ];
 
 export const CategoriesDisplay = () => {
   const [selected, setSelected] = useState<string[]>([]);
