@@ -134,16 +134,12 @@ export function UploadForm({ groups }: UploadFormProps) {
 
       console.log(response);
 
-      let groupID: string;
-      if (!value.createNewGroup) {
-        groupID = submissionData.groupId;
-        navigate({
-          to: `/gallery/$collectionId`,
-          params: { collectionId: groupID },
-        });
-      }
+      const groupID = response.group_id || value.groupId;
 
-      // TODO:// Handle new group creation and redirect to newly created collecion
+      navigate({
+        to: `/gallery/$collectionId`,
+        params: { collectionId: groupID },
+      });
     },
   });
 
@@ -183,6 +179,9 @@ export function UploadForm({ groups }: UploadFormProps) {
   };
 
   console.log(form.fieldInfo);
+
+  // if (isUploading) {
+  // }
   return (
     <form
       onSubmit={(e) => {
