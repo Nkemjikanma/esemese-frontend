@@ -1,5 +1,6 @@
 import type { AnyFieldApi } from "@tanstack/react-form";
 import { createFormHook, createFormHookContexts } from "@tanstack/react-form";
+import { useNavigate } from "@tanstack/react-router";
 import { UploadCloud, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { z } from "zod";
@@ -16,10 +17,11 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
+import type { GroupsResponse } from "@/hooks/useGetGroup";
 import { useUploadPhotos } from "@/hooks/useUploadPhoto";
 
 interface UploadFormProps {
-  mode: "single" | "group";
+  groups: GroupsResponse;
 }
 
 const fileSchema = z.custom<File>((val) => val instanceof File, {
@@ -74,13 +76,6 @@ function FieldInfo({ field }: { field: AnyFieldApi }) {
   );
 }
 
-// TODO: Fetch groups
-const GROUPS = [
-  { id: "group1", name: "Nature Collection" },
-  { id: "group2", name: "Urban Scenes" },
-  { id: "group3", name: "Black & White" },
-];
-
 const CATEGORIES = [
   "Landscape",
   "Portrait",
@@ -102,7 +97,9 @@ export interface FileType {
   file: File;
 }
 
-export function UploadForm({ mode }: UploadFormProps) {
+export function UploadForm({ groups }: UploadFormProps) {
+  const navigate = useNavigate();
+
   const [files, setFiles] = useState<FileType[]>([]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -123,6 +120,7 @@ export function UploadForm({ mode }: UploadFormProps) {
 
       if (files.length === 0) {
         console.log("Please upload at least one image");
+        return;
       }
 
       const submissionData = {
@@ -132,7 +130,20 @@ export function UploadForm({ mode }: UploadFormProps) {
 
       console.log(submissionData);
 
-      await upload(submissionData);
+      const response = await upload(submissionData);
+
+      console.log(response);
+
+      let groupID: string;
+      if (!value.createNewGroup) {
+        groupID = submissionData.groupId;
+        navigate({
+          to: `/gallery/$collectionId`,
+          params: { collectionId: groupID },
+        });
+      }
+
+      // TODO:// Handle new group creation and redirect to newly created collecion
     },
   });
 
@@ -242,7 +253,7 @@ export function UploadForm({ mode }: UploadFormProps) {
                           <SelectValue placeholder="Select a group" />
                         </SelectTrigger>
                         <SelectContent className="bg-white">
-                          {GROUPS.map((group) => (
+                          {groups.groups.map((group) => (
                             <SelectItem key={group.id} value={group.id}>
                               {group.name}
                             </SelectItem>
@@ -274,7 +285,7 @@ export function UploadForm({ mode }: UploadFormProps) {
         >
           <UploadCloud className="h-12 w-12 text-gray-400 mb-2" />
           <span className="text-sm font-medium text-gray-600">
-            {mode === "single" ? "Upload a photo" : "Upload multiple photos"}
+            Upload a photo
           </span>
           <span className="text-xs text-gray-500 mt-1">
             Click to browse or drag and drop

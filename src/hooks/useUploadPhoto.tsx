@@ -41,6 +41,9 @@ export const useUploadPhotos = () => {
   const uploadFiles = async (data: UploadRequest) => {
     const formData = new FormData();
 
+    console.log("Files to upload:", data.files.length);
+    console.log("Photos metadata:", data.photos.length);
+
     // add group information
     formData.append("createNewGroup", data.createNewGroup.toString());
 
@@ -51,8 +54,16 @@ export const useUploadPhotos = () => {
     }
 
     if (data.files.length === data.photos.length) {
+      // generate ids for a ll files
+      const fileIds = data.files.map(
+        (_, index) => `file_${Date.now()}_${index}`,
+      );
+
       data.photos.forEach((photo, index) => {
-        const uniqueId = `file_${Date.now()}_${index}`;
+        const uniqueId = fileIds[index];
+
+        console.log("File type:", data.files[index].file.constructor.name);
+
         formData.append(uniqueId, data.files[index].file);
 
         formData.append(
@@ -65,49 +76,20 @@ export const useUploadPhotos = () => {
       });
     }
 
-    // Use AbortController for timeout/cancellation
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 300000);
-
-    // upload progress tracking
     try {
-      const xhr = new XMLHttpRequest();
-
-      const response = await new Promise<any>((resolve, reject) => {
-        xhr.upload.addEventListener("progress", (event) => {
-          if (event.lengthComputable) {
-            const percentComplete = Math.round(
-              (event.loaded / event.total) * 100,
-            );
-            setProgress(percentComplete);
-          }
-        });
-
-        xhr.addEventListener("load", () => {
-          if (xhr.status >= 200 && xhr.status < 300) {
-            try {
-              const response = JSON.parse(xhr.responseText);
-              resolve(response);
-            } catch (e) {
-              reject(new Error("Invalid JSON response"));
-            }
-          } else {
-            reject(new Error(`HTTP Error: ${xhr.status}`));
-          }
-        });
-
-        xhr.addEventListener("error", () => reject(new Error("Network error")));
-        xhr.addEventListener("abort", () =>
-          reject(new Error("Upload aborted")),
-        );
-
-        xhr.open("POST", "/api/upload");
-        xhr.send(formData);
+      const response = await fetch("http://localhost:3000/upload", {
+        method: "POST",
+        body: formData,
       });
 
-      return response;
-    } finally {
-      clearTimeout(timeoutId);
+      if (!response.ok) {
+        throw new Error(`HTTP Error: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Upload error:", error);
+      throw error;
     }
   };
 

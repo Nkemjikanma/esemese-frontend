@@ -1,12 +1,24 @@
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { MoveLeft } from "lucide-react";
+import { useGetGroups } from "@/hooks/useGetGroup";
 import { UploadForm } from "./-form";
 
 export const Route = createFileRoute("/(account)/$walletId/")({
+  loader: ({ context: { queryClient } }) =>
+    queryClient.ensureQueryData(useGetGroups),
   component: RouteComponent,
+  pendingComponent: () => (
+    <div className="flex items-center justify-center h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-600"></div>
+    </div>
+  ),
 });
 
 function RouteComponent() {
+  const { data: groups } = useSuspenseQuery(useGetGroups);
+
+  console.log(groups);
   return (
     <div className="relative w-screen min-w-96 flex flex-col justify-center items-center gap-2 h-full mx-auto">
       <div className="flex justify-between py-4 w-10/12">
@@ -23,7 +35,7 @@ function RouteComponent() {
       <div className="flex relative w-10/12 items-center">
         <div className="w-full items-center ">
           <div className="">
-            <UploadForm mode="single" />
+            <UploadForm groups={groups} />
           </div>
         </div>
       </div>
